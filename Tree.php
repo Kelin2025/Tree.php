@@ -39,15 +39,16 @@
      *                  or string 'path.to.item'
      * @return  mixed   returns tree item
      */
-    public function get($address){
+    public function get($address,$array=null){
+      if($array == null) $array = $this->array;
       $this->parseaddress($address);
       $key = array_shift($address);
       return 
-        !array_key_exists($key,$this->array)
+        !array_key_exists($key,$array) || $array[$key] == null
         ? null
         : (count($address) > 0
-          ? $this->get($address,$this->array[$key])
-          : $this->array[$key]
+          ? $this->get($address,$array[$key])
+          : $array[$key]
         );
     }
 
