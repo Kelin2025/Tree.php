@@ -133,17 +133,15 @@
      *                  or string 'path.to.item'
      * @return   bool   returns true if item exists and false if not.
      */
-    public function has($address,$array=null){
-      if($array == null) $array = $this->array;
+    public function has($address){
+      $arr = &$this->array;
       $this->parseaddress($address);
-      $key = array_shift($address);
-      return 
-        !array_key_exists($key,$array) || $array[$key] == null
-        ? false
-        : (count($address) > 0
-          ? $this->has($address,$array[$key])
-          : true
-        );
+      while(count($address) > 0){
+        $key = array_shift($address);
+        if(!isset($arr[$key])) return false;
+        $arr = &$arr[$key];
+      }
+      return true;
     }
 
     /**
