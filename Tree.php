@@ -1,6 +1,7 @@
 <?
 
   /* 
+   * Tree.php
    * Class to work with trees
    * Author: Anton Kosykh
    * Nickname: Kelin
@@ -55,49 +56,42 @@
     /**
      * Set tree item
      * @param   address  address of tree item. It can be written:
-     *                  as an array ['path','to','item']
-     *                  or string 'path.to.item'
-     * @return  mixed   returns tree array
+     *                   as an array ['path','to','item']
+     *                   or string 'path.to.item'
+     * @param   val      value of tree item
+     * @return  mixed    returns this
      * @see     if the tree already contains the element
      *          it WILL be replaced
      */
-    public function set($address,$val,$arr=null){
-      if($arr == null) $arr = $this->array;
+    public function set($address,$val){
+      $arr = &$this->array;
       $this->parseaddress($address);
-      $key = array_shift($address);
-      if(!is_array($arr)){
-        $arr = [];
-      }
-      $item = &$arr[$key];
-      $item = 
-        count($address) > 0
-        ? $this->set($address,$val,$item)
-        : $val;
-      return $this->array = $arr;
+      foreach ($address as $key)
+        $arr = &$arr[$key];
+      $arr = $val;
+      return $this;
     }
 
     /**
      * Set tree item
      * @param   address  address of tree item. It can be written:
-     *                  as an array ['path','to','item']
-     *                  or string 'path.to.item'
-     * @return  mixed   returns tree array
+     *                   as an array ['path','to','item']
+     *                   or string 'path.to.item'
+     * @param   val      value of tree item
+     * @return  mixed    returns tree array
      * @see     if the tree already contains the element
      *          it WILL NOT be replaced.
      */
-    public function add($address,$val,$arr=null){
-      if($arr == null) $arr = $this->array;
+    public function add($address,$val){
+      $arr = &$this->array;
       $this->parseaddress($address);
-      $key = array_shift($address);
-      if(!empty($arr) && !is_array($arr)){
-        $arr = [$arr];
+      foreach ($address as $key) {
+        $arr = &$arr[$key];
+        if(isset($arr) && !is_array($arr))
+          $arr = [$arr];
       }
-      $item = &$arr[$key];
-      $item = 
-        count($address) > 0
-        ? $this->add($address,$val,$item)
-        : (!empty($item) ? [$item,$val] : $val);
-      return $this->array = $arr;
+      $arr = $val;
+      return $this;
     }
 
     /**
@@ -107,10 +101,16 @@
      *                  or string 'path.to.item'
      * @return  array   returns updated tree
      */
-    public function remove($address,$arr=null,$first=true){
-      if($arr == null) $arr = $this->array;
+    public function remove($address){
+      $arr = &$this->array;
       $this->parseaddress($address);
-      $key = array_shift($address);
+      while(count($address) > 0){
+        if(count($address) == 1)
+          unset($arr[array_shift($address)]);
+        else
+          $arr = &$arr[array_shift($address)];
+      }
+      /*$key = array_shift($address);
       foreach($arr as $item => $val){
         if($item === $key){
           if(count($address) > 0){
@@ -122,7 +122,7 @@
           }
         }
       }
-      return $this->array = $arr;
+      return $this->array = $arr; */
     }
 
     /**
@@ -137,7 +137,7 @@
       $this->parseaddress($address);
       $key = array_shift($address);
       return 
-        !array_key_exists($key,$array)
+        !array_key_exists($key,$array) || $array[$key] == null
         ? false
         : (count($address) > 0
           ? $this->has($address,$array[$key])
