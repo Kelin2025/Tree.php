@@ -44,7 +44,7 @@
       $this->parseaddress($address);
       $key = array_shift($address);
       return 
-        !array_key_exists($key,$array) || $array[$key] == null
+        !array_key_exists($key,$array) || $array[$key] === null
         ? null
         : (count($address) > 0
           ? $this->get($address,$array[$key])
