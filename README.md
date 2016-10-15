@@ -31,7 +31,7 @@ Hello World!
 ### Get the full tree
 To get the full tree, use the ```getTree``` method
 ```PHP
-print_r($tree->getTree()); // Full tree
+print_r($tree->getTree());
 ```
 Result:
 ```PHP
