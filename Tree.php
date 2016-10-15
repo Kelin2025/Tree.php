@@ -1,7 +1,6 @@
 <?
 
   /* 
-   * Tree.php
    * Class to work with trees
    * Author: Anton Kosykh
    * Nickname: Kelin
@@ -10,7 +9,7 @@
    * Copyright (c) 2016 - Anton Kosykh
    */
 
-  class Tree {
+  class Tree_Object {
 
     /** 
      * Tree array
@@ -66,8 +65,10 @@
     public function set($address,$val){
       $arr = &$this->array;
       $this->parseaddress($address);
-      foreach ($address as $key)
+      foreach ($address as $key){
+        if(isset($arr[$key])) unset($arr[$key]);
         $arr = &$arr[$key];
+      }
       $arr = $val;
       return $this;
     }
