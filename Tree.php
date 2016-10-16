@@ -37,14 +37,16 @@
      * @param   address  address of tree item. It can be written:
      *                   as an array ['path','to','item']
      *                   or string 'path.to.item'
-     * @return  mixed    returns tree item
+     * @return  mixed    returns tree item or null (if tree item doesn't exist)
      */
     public function get($address){
-      $val = &$this->array;
+      $val = $this->array;
       $this->parseaddress($address);
       foreach ($address as $key){
-        if(isset($val[$key])) return null;
-        $val = &$val[$key];
+        if(!array_key_exists($key,$val)){
+          return null;
+        }
+        $val = $val[$key];
       }
       return $val;
     }
