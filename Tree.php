@@ -40,13 +40,13 @@
      * @return  mixed    returns tree item
      */
     public function get($address){
-      $arr = &$this->array;
+      $val = &$this->array;
       $this->parseaddress($address);
       foreach ($address as $key){
-        if(isset($arr[$key])) return null;
-        $arr = &$arr[$key];
+        if(isset($val[$key])) return null;
+        $val = &$val[$key];
       }
-      return $arr;
+      return $val;
     }
 
     /**
