@@ -95,6 +95,19 @@ Array (
   )
 )
 ```
+### Set/add many items
+You can use methods ```addList``` and ```setList``` to set/add more than 1 item simpler. 
+Example:
+```PHP
+$tree->setList([
+  ['path.to.tree','value'],
+  ['another.path','another value']]
+]);
+// This equals to
+$tree
+  ->set('path.to.tree','value')
+  ->set('another.path','another value');
+```
 ### Check tree item
 If you need to verify the existence of an element in the tree, you can use ```has``` method.
 Example:
@@ -149,6 +162,10 @@ Array (
   )
 )
 ```
-
+**UPD:** You can remove more than 1 tree item using this method.
+Example:
+```
+$tree->remove('first.item','second.item','and.so.on');
+```
 ## Contact info
 If you have some questions, you can create an issue or write to webmaster.kelin@yandex.ru
