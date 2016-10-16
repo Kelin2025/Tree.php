@@ -9,7 +9,7 @@
    * Copyright (c) 2016 - Anton Kosykh
    */
 
-  class Tree_Object {
+  class Tree {
 
     /** 
      * Tree array
@@ -58,7 +58,7 @@
      *                   as an array ['path','to','item']
      *                   or string 'path.to.item'
      * @param   val      value of tree item
-     * @return  mixed    returns this
+     * @return  this     returns this
      * @see     if the tree already contains the element
      *          it WILL be replaced
      */
@@ -79,7 +79,7 @@
      *                   as an array ['path','to','item']
      *                   or string 'path.to.item'
      * @param   val      value of tree item
-     * @return  mixed    returns tree array
+     * @return  this     returns this
      * @see     if the tree already contains the element
      *          it WILL NOT be replaced.
      */
@@ -96,13 +96,45 @@
     }
 
     /**
-     * Remove tree item
-     * @param   address  address of tree item. It can be written:
-     *                  as an array ['path','to','item']
-     *                  or string 'path.to.item'
-     * @return  array   returns updated tree
+     * Set list of tree items 
+     * @param   list     array contains arraays with arguments to set() method
+     *                   e.g. [['path.to.item','value'],['test','another']]
+     * @return  this     return this
      */
-    public function remove($address){
+    public function setList($list){
+      foreach($list as $item)
+        call_user_func_array([$this,'set'],$item);
+      return $this;
+    }
+
+    /**
+     * Add list of tree items 
+     * @param   list     array contains arraays with arguments to add() method
+     *                   e.g. [['path.to.item','value'],['test','another']]
+     * @return  this     return this
+     */
+    public function addList($list){
+      foreach($list as $item)
+        call_user_func_array([$this,'add'],$item);
+      return $this;
+    }
+
+    /**
+     * Remove tree item
+     * @param   address   address of tree item. It can be written:
+     *                    as an array ['path','to','item']
+     *                    or string 'path.to.item'
+     * @param   address2  you can use 2 or more addresses to remove.
+     * @return  this      returns this
+     */
+    public function remove(){
+      $args = func_get_args();
+      if(count($args) > 1){
+        foreach($args as $address)
+          $this->remove($address);
+        return $this;
+      }
+      $address = $args[0];
       $arr = &$this->array;
       $this->parseaddress($address);
       while(count($address) > 0){
@@ -111,19 +143,7 @@
         else
           $arr = &$arr[array_shift($address)];
       }
-      /*$key = array_shift($address);
-      foreach($arr as $item => $val){
-        if($item === $key){
-          if(count($address) > 0){
-            $arr[$item] = $this->remove($address,$arr[$item],false);
-          }
-          else {
-            unset($arr[$item]);
-            return $first ? $this->array = $arr : $arr;
-          }
-        }
-      }
-      return $this->array = $arr; */
+      return $this;
     }
 
     /**
