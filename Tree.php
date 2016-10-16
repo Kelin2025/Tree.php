@@ -35,21 +35,18 @@
     /**
      * Get tree item
      * @param   address  address of tree item. It can be written:
-     *                  as an array ['path','to','item']
-     *                  or string 'path.to.item'
-     * @return  mixed   returns tree item
+     *                   as an array ['path','to','item']
+     *                   or string 'path.to.item'
+     * @return  mixed    returns tree item
      */
-    public function get($address,$array=null){
-      if($array == null) $array = $this->array;
+    public function get($address){
+      $arr = &$this->array;
       $this->parseaddress($address);
-      $key = array_shift($address);
-      return 
-        !array_key_exists($key,$array) || $array[$key] === null
-        ? null
-        : (count($address) > 0
-          ? $this->get($address,$array[$key])
-          : $array[$key]
-        );
+      foreach ($address as $key){
+        if(isset($arr[$key])) return null;
+        $arr = &$arr[$key];
+      }
+      return $arr;
     }
 
     /**
