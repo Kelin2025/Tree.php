@@ -101,7 +101,7 @@ Example:
 ```PHP
 $tree->setList([
   ['path.to.tree','value'],
-  ['another.path','another value']]
+  ['another.path','another value']
 ]);
 // This equals to
 $tree
