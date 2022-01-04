@@ -1,4 +1,4 @@
-<?
+<?php
 
   /* 
    * Class to work with trees
@@ -150,14 +150,32 @@
      * @param   address  address of tree item. It can be written:
      *                  as an array ['path','to','item']
      *                  or string 'path.to.item'
-     * @return   bool   returns true if item exists and false if not.
+     * @return   bool   returns true if the item exists and is not null and false if not.
      */
     public function has($address){
       $arr = &$this->array;
       $this->parseaddress($address);
       while(count($address) > 0){
         $key = array_shift($address);
-        if(!isset($arr[$key])) return false;
+        if(!is_array($arr) || !isset($arr[$key])) return false;
+        $arr = &$arr[$key];
+      }
+      return true;
+    }
+
+    /**
+     * Check if tree item exists
+     * @param   address  address of tree item. It can be written:
+     *                  as an array ['path','to','item']
+     *                  or string 'path.to.item'
+     * @return   bool   returns true if item exists even if null and false if not.
+     */
+    public function exists($address){
+      $arr = &$this->array;
+      $this->parseaddress($address);
+      while(count($address) > 0){
+        $key = array_shift($address);
+        if(!is_array($arr) || !array_key_exists($key, $arr)) return false;
         $arr = &$arr[$key];
       }
       return true;
